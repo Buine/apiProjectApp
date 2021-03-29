@@ -6,7 +6,6 @@ const axios = require('axios').default;
 const tough = require('tough-cookie');
 const axiosCookieJarSupport = require('axios-cookiejar-support').default;
 const db = require('../../database');
-const { test } = require('../../database/config');
 const port = process.env.PORT || 3000;
 const host = process.env.FRONTEND_HOST || "localhost";
 const address = `http://${host}:${port}/api`;

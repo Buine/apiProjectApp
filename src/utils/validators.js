@@ -7,5 +7,12 @@ module.exports = {
             email: { type: "email", messages: { email: "Email invalid" } },
             password: { type: "string", min: 6, max: 128 },
         })
-    }
+    },
+    loginValidator: (value) => {
+        return v.validate(value, {
+            email: { type: "email", messages: { email: "Email invalid" } },
+            password: { type: "string", min: 6, max: 128 },
+        })
+    },
+
 }

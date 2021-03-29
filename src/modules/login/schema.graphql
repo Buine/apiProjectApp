@@ -1,0 +1,5 @@
+# import User from "../../database/models/User/schema.graphql"
+
+type Mutation {
+    login(email: String!, password: String!): User!
+}
