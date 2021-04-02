@@ -2,52 +2,37 @@
  * @jest-environment node
  */
 
-const axios = require('axios').default;
-const tough = require('tough-cookie');
-const axiosCookieJarSupport = require('axios-cookiejar-support').default;
+const ClientTest = require('../../utils/clientTest');
 const db = require('../../database');
-const port = process.env.PORT || 3000;
-const host = process.env.FRONTEND_HOST || "localhost";
-const address = `http://${host}:${port}/api`;
-var cookieJar;
+var client;
 
 beforeAll(async () => {
     await db.sequelize.sync();
-    axiosCookieJarSupport(axios);
-    cookieJar = new tough.CookieJar();
+    client = new ClientTest();
 });
 
 const email = "test@test.com";
 const password = "123456";
-const query = (e, p) => `
-mutation {
-    register(email: "${e}", password: "${p}"){
-        id
-        email
-    }
-}
-`;
 
 describe("register function", () => {
     it("user create successfully", async () => {
-        const response = await postApi(query(email, password));
+        const response = await client.register({ email, password }, true);
         const user = await db.User.findOne({ where: { email } });
         expect(response.data.register).toEqual({ id: user.id, email: user.email });
     });
 
     it("user already exists", async () => {
-        const response = await postApi(query(email, password), true);
+        const response = await await client.register({email, password}, false);
         expect(response.errors[0].extensions.code).toEqual("USER_EXIST");
     });
 
     it("session already exists", async () => {
-        const response = await postApi(query("test2@test.com", password));
-        //console.log(response);
+        const response = await await client.register({ email: "test2@test.com", password}, true);
         expect(response.errors[0].extensions.code).toEqual("ACTIVE_SESSION");
     });
 
     it("email invalid", async () => {
-        const response = await postApi(query("", password));
+        const response = await client.register({ email: "", password }, false);
         expect(
             response.errors[0]
             .extensions.error
@@ -57,7 +42,7 @@ describe("register function", () => {
     });
 
     it("password invalid", async () => {
-        const response = await postApi(query("", ""));
+        const response = await client.register({ email: "", password: ""}, false);
         expect(
             response.errors[0]
             .extensions.error
@@ -66,15 +51,3 @@ describe("register function", () => {
             ).toBe(true);
     });
 });
-
-async function postApi(query, notCookies) {
-    const response = await axios({
-        method: 'post',
-        jar: !notCookies ? cookieJar: undefined,
-        withCredentials: !notCookies ? true :  false,
-        url: address,
-        data: { query },
-    });
-
-    return response.data;
-}

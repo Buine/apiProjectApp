@@ -27,6 +27,7 @@
     "ioredis": "^4.24.5",
     "pg": "^8.5.1",
     "pg-hstore": "^2.3.3",
+    "requestify": "^0.2.5",
     "sequelize": "^6.6.2",
     "tough-cookie": "^4.0.0",
     "uuidv4": "^6.2.7"
