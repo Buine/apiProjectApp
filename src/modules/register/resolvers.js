@@ -1,4 +1,3 @@
-const { ApolloError } = require("apollo-server-errors");
 const { registerValidator } = require("../../utils/validators");
 const { InputError, 
         AlreadyAuthenticatedError,

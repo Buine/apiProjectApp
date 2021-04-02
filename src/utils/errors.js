@@ -16,4 +16,7 @@ module.exports = {
     EmailAlreadyRegisteredError: createError('EmailAlreadyRegisteredError', {
         message: 'The email is already in use',
     }),
+    NotAuthenticatedError: createError('NotAuthenticatedError', {
+        message: 'You are not authenticated',
+    }),
 }
