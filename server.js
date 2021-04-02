@@ -1,5 +1,6 @@
 const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
+const { formatError } = require('apollo-errors');
 const cors = require('cors');
 const session = require('express-session');
 const connectRedis = require('connect-redis');
@@ -23,7 +24,8 @@ const startServer = async () => {
 
     // Server Config
     const server = new ApolloServer({ 
-        schema: genSchema(), 
+        schema: genSchema(),
+        formatError, 
         context: ({ req }) => ({ 
             redis,
             db,

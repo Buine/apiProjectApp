@@ -22,20 +22,20 @@ describe("register function", () => {
     });
 
     it("user already exists", async () => {
-        const response = await await client.register({email, password}, false);
-        expect(response.errors[0].extensions.code).toEqual("USER_EXIST");
+        const response = await client.register({email, password}, false);
+        expect(response.errors[0].name).toEqual("EmailAlreadyRegisteredError");
     });
 
     it("session already exists", async () => {
-        const response = await await client.register({ email: "test2@test.com", password}, true);
-        expect(response.errors[0].extensions.code).toEqual("ACTIVE_SESSION");
+        const response = await client.register({ email: "test2@test.com", password}, true);
+        expect(response.errors[0].name).toEqual("AlreadyAuthenticatedError");
     });
 
     it("email invalid", async () => {
         const response = await client.register({ email: "", password }, false);
         expect(
             response.errors[0]
-            .extensions.error
+            .data.fields
             .filter(
                 (item) => item.path == "email").length > 0
             ).toBe(true);
@@ -45,7 +45,7 @@ describe("register function", () => {
         const response = await client.register({ email: "", password: ""}, false);
         expect(
             response.errors[0]
-            .extensions.error
+            .data.fields
             .filter(
                 (item) => item.path == "password").length > 0
             ).toBe(true);

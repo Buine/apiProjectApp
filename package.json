@@ -11,12 +11,15 @@
   "keywords": [
     "api"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Buine/apiProjectApp.git"
+  },
   "author": "buine",
   "license": "ISC",
   "devDependencies": {
+    "apollo-errors": "^1.9.0",
     "apollo-server-express": "^2.22.1",
-    "axios": "^0.21.1",
-    "axios-cookiejar-support": "^1.0.1",
     "bcryptjs": "^2.4.3",
     "connect-redis": "^5.1.0",
     "express": "^4.17.1",

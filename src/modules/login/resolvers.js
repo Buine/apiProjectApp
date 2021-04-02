@@ -1,5 +1,10 @@
 const { ApolloError } = require("apollo-server-errors");
 const { loginValidator } = require("../../utils/validators");
+const { InputError, 
+        AlreadyAuthenticatedError, 
+        UserNotExistError, 
+        BadPasswordError 
+} = require('../../utils/errors');
 const bcrypt = require('bcryptjs');
 
 module.exports = {
@@ -7,27 +12,40 @@ module.exports = {
         login: async (_, data, { redis, db, req, session, config }) => {
             const isValid = loginValidator(data);
             if(isValid != true) {
-                const error = isValid.map((err) => ({ message: err.message, path: err.field }));
-                throw new ApolloError('Field or fields invalid', 'INPUT_ERR',{
-                    error
+                const errorsMap = isValid.map((err) => ({ message: err.message, path: err.field }));
+                throw new InputError({
+                    data: { 
+                        fields: errorsMap,
+                        path: "login" 
+                    },
                 });
             }
 
             if(session.userId){
-                throw new ApolloError('You already have an active session', "ACTIVE_SESSION");
+                throw new AlreadyAuthenticatedError({
+                    data: {
+                        path: "login"
+                    }
+                });
             }
 
             const user = await db.User.findOne({ where: { email: data.email } });
             if(!user) {
-                throw new ApolloError('Email not register', 'INVALID_LOGIN', {
-                    email: data.email
+                throw new UserNotExistError({
+                    data: {
+                        email: data.email,
+                        path: "login"
+                    }
                 });
             }
             
             const verify = await bcrypt.compare(data.password, user.password);
             if(!verify) {
-                throw new ApolloError('Password incorrect', 'INVALID_LOGIN', {
-                    password: 'invalid'
+                throw new BadPasswordError({
+                    data: {
+                        email: data.email,
+                        path: "login"
+                    }
                 });
             }
 

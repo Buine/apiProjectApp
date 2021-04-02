@@ -1,5 +1,9 @@
 const { ApolloError } = require("apollo-server-errors");
 const { registerValidator } = require("../../utils/validators");
+const { InputError, 
+        AlreadyAuthenticatedError,
+        EmailAlreadyRegisteredError
+} = require('../../utils/errors');
 
 module.exports = {
     Mutation: {
@@ -7,18 +11,30 @@ module.exports = {
             const isValid = registerValidator(data);
             if(isValid != true) {
                 const errorsMap = isValid.map((item) => ({ message: item.message, path: item.field }));
-                throw new ApolloError(`Field or fields invalid`, "INPUT_ERR", {
-                    error: errorsMap
+                throw new InputError({
+                    data: { 
+                        fields: errorsMap,
+                        path: "register" 
+                    },
                 });
             }
 
             if(session.userId){
-                throw new ApolloError('You already have an active session', "ACTIVE_SESSION");
+                throw new AlreadyAuthenticatedError({
+                    data: {
+                        path: "register"
+                    }
+                });
             }
 
             const userExist = await db.User.findOne({ where: { email: data.email } });
             if(userExist){
-                throw new ApolloError(`User has already exist`, "USER_EXIST", { email: data.email });
+                throw new EmailAlreadyRegisteredError({
+                    data: {
+                        email: data.email,
+                        path: "register"
+                    }
+                });
             }
             const user = await db.User.build(data);
             await user.save();

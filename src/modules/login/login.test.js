@@ -23,6 +23,6 @@ describe('login function', () => {
     }),
     it('session already exists', async () => {
         const response = await client.login({ email, password }, true);
-        expect(response.errors[0].extensions.code).toEqual('ACTIVE_SESSION');
+        expect(response.errors[0].name).toEqual('AlreadyAuthenticatedError');
     })
 });
