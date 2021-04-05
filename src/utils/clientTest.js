@@ -1,6 +1,6 @@
 const requestify = require('requestify');
 const { sessions } = require('../../config');
-const { register, login, tmp, logout } = require('./queryTest');
+const { register, login, tmp, logout, me } = require('./queryTest');
 
 class ClientTest {
     constructor() {
@@ -69,6 +69,20 @@ class ClientTest {
         const response = await requestify.request(this.address, {
             method: 'POST',
             body: { query: logout() },
+            cookies
+        });
+        if(withCookies){ 
+            this.saveSession(response);
+            this.clearSession(); 
+        }
+        return response.getBody();
+    }
+
+    async me(withCookies = false) {
+        let cookies = withCookies ? this.cookiesManager : {};
+        const response = await requestify.request(this.address, {
+            method: 'POST',
+            body: { query: me() },
             cookies
         });
         if(withCookies){ 

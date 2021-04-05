@@ -17,4 +17,5 @@ module.exports = {
     }
     `,
     logout: () => `mutation { logout }`,
+    me: () => `{ me{ id } }`,
 }
