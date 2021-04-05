@@ -1,6 +1,3 @@
-const { 
-    NotAuthenticatedError
-} = require('../../utils/errors');
 const { removeAllUsersSessions } = require('../../utils/removeAllUserSessions');
 const applyMiddleware = require("../../utils/applyMiddleware");
 const middleware = require("../../utils/middlewareSession");
