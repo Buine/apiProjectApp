@@ -1,0 +1,3 @@
+type Mutation {
+    forgetPassword(email: String!): Boolean!
+}

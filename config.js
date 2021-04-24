@@ -14,5 +14,10 @@ module.exports = {
         name: "qid",
         prefix: "sess:",
         secret: "secret sessions key",
-    }
+    },
+
+    tokens: {
+        prefix: "token:",           // Prefix token in redis
+        expiration: 1000 * 60 * 60  // 1 hour
+    },
 }

@@ -9,6 +9,7 @@ const Redis = require('ioredis');
 const genSchema = require('./src/utils/generateSchema');
 const db = require("./src/database/index");
 const config = require("./config");
+const router = require('./src/routes/router');
 
 // Consts
 const env = process.env.NODE_ENV || 'development';      // Variable de entorno
@@ -60,6 +61,7 @@ const startServer = async () => {
     );
 
     server.applyMiddleware({ app, path: '/api' });
+    app.use(router(redis, db, config)); // Routes
     return app;
 }
 

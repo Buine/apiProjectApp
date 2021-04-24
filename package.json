@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "set NODE_ENV=test&& nodemon index.js",
-    "dev": "set NODE_ENV=development&& nodemon index.js",
-    "jest": "set NODE_ENV=test&& jest --runInBand --forceExit"
+    "test": "export NODE_ENV=test ; nodemon index.js",
+    "dev": "export NODE_ENV=development ; nodemon index.js",
+    "jest": "export NODE_ENV=test ; jest --runInBand --forceExit"
   },
   "keywords": [
     "api"
@@ -26,6 +26,7 @@
     "express-session": "^1.17.1",
     "fastest-validator": "^1.10.1",
     "graphql": "^15.5.0",
+    "graphql-import": "^0.7.1",
     "graphql-tools": "^7.0.4",
     "ioredis": "^4.24.5",
     "pg": "^8.5.1",
